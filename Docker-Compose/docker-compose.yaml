@@ -5,7 +5,14 @@ services:
     ports:
       - "8080:80"
     restart: always
-  serverserverproxy:
+  reverse-proxy:
+    image: traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --docker
+    ports: 
+      - 8080:80
+ serverserverproxy:
     image: serverserver:latest
     ports:
       - "5000:80"

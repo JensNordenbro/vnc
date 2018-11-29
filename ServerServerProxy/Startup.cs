@@ -37,7 +37,7 @@ namespace VncDeviceProxyCloudSide
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            /*
             m_Logger.LogInformation("Adding proxy proxies");
             IPAddress[] a = GetApprovedProxyAddresses();
             m_Logger.LogInformation($"Got {a.Length} addresses");
@@ -59,6 +59,7 @@ namespace VncDeviceProxyCloudSide
                 }
             });
             m_Logger.LogInformation($"Configure done");
+            */
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -94,6 +95,7 @@ namespace VncDeviceProxyCloudSide
                 app.UseExceptionHandler("/Home/Error");
          
             }
+            /*
             var forwardingOptions = new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -103,7 +105,7 @@ namespace VncDeviceProxyCloudSide
 
             app.UseForwardedHeaders(forwardingOptions);
 
-    
+            */
 
             app.UseWebSockets();
 
