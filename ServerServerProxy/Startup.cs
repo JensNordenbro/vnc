@@ -109,7 +109,7 @@ namespace VncDeviceProxyCloudSide
 
             app.Use(async (context, next) =>
             {
-       
+                m_Logger.LogInformation("REQUEST RECEIVED");
                 if (context.WebSockets.IsWebSocketRequest)
                 {
                     m_Logger.LogInformation("Accepting websocket");
