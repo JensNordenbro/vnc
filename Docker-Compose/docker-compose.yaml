@@ -16,4 +16,3 @@ services:
     ports:
       - "6080:6080"
     restart: always
-  
