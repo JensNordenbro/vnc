@@ -24,6 +24,13 @@ server
     #server_name 40.127.108.43;
     #proxy_set_header Host $host;
     #proxy_set_header X-Forwarded-For $remote_addr;
+    location /ws {
+        proxy_pass http://serverserverproxy:6000;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
     location /novnc { 
         rewrite /novnc/(.*) /$1 break;
         proxy_pass http://novnc:6080;
@@ -36,11 +43,5 @@ server
         proxy_set_header Upgrade $http_upgrade; 
         proxy_set_header Connection "Upgrade";
     }
-    location /ws {
-        proxy_pass http://serverserverproxy:6000;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+  
 }
