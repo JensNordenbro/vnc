@@ -94,10 +94,14 @@ namespace VncDeviceProxyCloudSide
                 app.UseExceptionHandler("/Home/Error");
          
             }
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            var forwardingOptions = new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+            };
+            forwardingOptions.KnownNetworks.Clear();
+            forwardingOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(forwardingOptions);
 
     
 
