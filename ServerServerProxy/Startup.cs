@@ -105,7 +105,12 @@ namespace VncDeviceProxyCloudSide
          
             }
 
-            app.UseWebSockets();
+            app.Run(async (context) =>
+            {
+                await context.Response.WriteAsync("Hello World!");
+            });
+
+            //   app.UseWebSockets();
 
             app.Use(async (context, next) =>
             {
