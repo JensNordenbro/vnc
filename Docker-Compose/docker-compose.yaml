@@ -8,7 +8,7 @@ services:
   socketproxy:
     image: serverserver:latest
     ports:
-      - "5000:80"
+      - "5000:5000"
       - "5900:5900"
     restart: always
   novnc:
