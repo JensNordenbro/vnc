@@ -104,7 +104,7 @@ namespace VncDeviceProxyCloudSide
                 app.UseExceptionHandler("/Home/Error");
          
             }
-            
+
             app.UseWebSockets();
 
             app.Use(async (context, next) =>
@@ -118,9 +118,11 @@ namespace VncDeviceProxyCloudSide
                 }
                 else
                 {
-                    context.Response.StatusCode = 400;
+                    m_Logger.LogInformation("DDR WAS HERE");
+                    await next();
                 }
             });
+
 
             // not the best place perhaps to start a service but it is a spike :) 
             var socketServer = new TcpListener(IPAddress.Any, 5900);
