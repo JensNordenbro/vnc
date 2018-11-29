@@ -3,4 +3,4 @@ EXPOSE 6080
 WORKDIR /app
 RUN git clone https://github.com/novnc/noVNC.git
 RUN chmod +x /app/noVNC/utils/launch.sh
-ENTRYPOINT ["/app/noVNC/utils/launch.sh", "--vnc", "serverserverproxy:5900"]
+ENTRYPOINT ["/app/noVNC/utils/launch.sh", "--vnc", "socketproxy:5900"]
