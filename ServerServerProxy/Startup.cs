@@ -37,7 +37,7 @@ namespace VncDeviceProxyCloudSide
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            /*
+            
             m_Logger.LogInformation("Adding proxy proxies");
             IPAddress[] a = GetApprovedProxyAddresses();
             m_Logger.LogInformation($"Got {a.Length} addresses");
@@ -49,6 +49,11 @@ namespace VncDeviceProxyCloudSide
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
+
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+
                 m_Logger.LogInformation($"Requesting DNS");
                 IPAddress[] addresses = GetApprovedProxyAddresses();
                 m_Logger.LogInformation($"Got {addresses.Length} addresses");
@@ -59,7 +64,7 @@ namespace VncDeviceProxyCloudSide
                 }
             });
             m_Logger.LogInformation($"Configure done");
-            */
+            
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -70,6 +75,7 @@ namespace VncDeviceProxyCloudSide
         private IEnumerable<IPAddress> _GetApprovedProxyAddresses()
         {
             yield return IPAddress.Parse("40.127.108.43");
+            yield return IPAddress.Parse("127.0.0.1");
             {
                 IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
                 foreach (var a in addresses)
@@ -85,6 +91,7 @@ namespace VncDeviceProxyCloudSide
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseForwardedHeaders();
             loggerFactory.AddConsole();
             if (env.IsDevelopment())
             {
@@ -95,18 +102,7 @@ namespace VncDeviceProxyCloudSide
                 app.UseExceptionHandler("/Home/Error");
          
             }
-            /*
-            var forwardingOptions = new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            };
-            forwardingOptions.KnownNetworks.Clear();
-            forwardingOptions.KnownProxies.Clear();
-
-            app.UseForwardedHeaders(forwardingOptions);
-
-            */
-
+            
             app.UseWebSockets();
 
             app.Use(async (context, next) =>
