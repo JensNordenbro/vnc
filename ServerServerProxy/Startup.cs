@@ -34,7 +34,21 @@ namespace VncDeviceProxyCloudSide
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+
             m_Logger.LogInformation("Adding proxy nginxproxy");
+            IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
+            m_Logger.LogInformation($"Got {addresses.Length} addresses");
+            for (int i = 0; i < addresses.Length; i++)
+            {
+                m_Logger.LogInformation($"Adding {addresses[i].ToString()} ");
+            }
+
+
+
+
+
+
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 m_Logger.LogInformation($"Requesting DNS");
