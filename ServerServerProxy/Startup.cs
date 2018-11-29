@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.WebSockets;
@@ -36,8 +38,8 @@ namespace VncDeviceProxyCloudSide
             });
 
 
-            m_Logger.LogInformation("Adding proxy nginxproxy");
-            IPAddress[] a = Dns.GetHostAddresses("nginxproxy");
+            m_Logger.LogInformation("Adding proxy proxies");
+            IPAddress[] a = GetApprovedProxyAddresses();
             m_Logger.LogInformation($"Got {a.Length} addresses");
             for (int i = 0; i < a.Length; i++)
             {
@@ -45,22 +47,38 @@ namespace VncDeviceProxyCloudSide
             }
 
 
-
-
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 m_Logger.LogInformation($"Requesting DNS");
-                IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
+                IPAddress[] addresses = GetApprovedProxyAddresses();
                 m_Logger.LogInformation($"Got {addresses.Length} addresses");
                 for (int i = 0; i < addresses.Length; i++)
                 {
-                    m_Logger.LogInformation($"Adding {addresses[i].ToString()} ");
+                    m_Logger.LogInformation($"Now Adding {addresses[i].ToString()} ");
                     options.KnownProxies.Add(addresses[i]);
                 }
             });
             m_Logger.LogInformation($"Configure done");
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        private IPAddress[] GetApprovedProxyAddresses() => _GetApprovedProxyAddresses().ToArray();
+
+
+        private IEnumerable<IPAddress> _GetApprovedProxyAddresses()
+        {
+            yield return IPAddress.Parse("40.127.108.43");
+            {
+                IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
+                foreach (var a in addresses)
+                    yield return a;
+            }
+            {
+                IPAddress[] addresses = Dns.GetHostAddresses("serverserverproxy");
+                foreach (var a in addresses)
+                    yield return a;
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
