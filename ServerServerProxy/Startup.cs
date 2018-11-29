@@ -37,14 +37,12 @@ namespace VncDeviceProxyCloudSide
 
 
             m_Logger.LogInformation("Adding proxy nginxproxy");
-            IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
-            m_Logger.LogInformation($"Got {addresses.Length} addresses");
-            for (int i = 0; i < addresses.Length; i++)
+            IPAddress[] a = Dns.GetHostAddresses("nginxproxy");
+            m_Logger.LogInformation($"Got {a.Length} addresses");
+            for (int i = 0; i < a.Length; i++)
             {
-                m_Logger.LogInformation($"Adding {addresses[i].ToString()} ");
+                m_Logger.LogInformation($"Adding {a[i].ToString()} ");
             }
-
-
 
 
 
