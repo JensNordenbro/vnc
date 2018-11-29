@@ -23,7 +23,8 @@ server
     listen 80;
 
     location /ws {
-        proxy_pass http://serverserverproxy:6000;
+        rewrite /ws/(.*) /$1 break;
+        proxy_pass http://socketproxy:6000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:80"
     restart: always
-  serverserverproxy:
+  socketproxy:
     image: serverserver:latest
     ports:
       - "6000:80"
