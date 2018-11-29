@@ -37,7 +37,7 @@ server
         proxy_set_header Connection "Upgrade";
     }
     location /ws {
-        proxy_pass http://serverserverproxy:5000;
+        proxy_pass http://serverserverproxy:6000;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
