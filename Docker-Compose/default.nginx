@@ -21,7 +21,7 @@
 server
 {
     listen 80;
-    server_name localhost;
+    server_name 40.127.108.43;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $remote_addr;
     location /novnc { 
