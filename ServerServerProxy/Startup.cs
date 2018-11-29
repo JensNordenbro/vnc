@@ -74,6 +74,9 @@ namespace VncDeviceProxyCloudSide
 
         private IEnumerable<IPAddress> _GetApprovedProxyAddresses()
         {
+            yield break;
+            /*
+
             yield return IPAddress.Parse("40.127.108.43");
             yield return IPAddress.Parse("127.0.0.1");
             yield return IPAddress.Parse("172.19.0.1");
@@ -88,6 +91,7 @@ namespace VncDeviceProxyCloudSide
                 foreach (var a in addresses)
                     yield return a;
             }
+            */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
