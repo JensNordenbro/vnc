@@ -76,6 +76,8 @@ namespace VncDeviceProxyCloudSide
         {
             yield return IPAddress.Parse("40.127.108.43");
             yield return IPAddress.Parse("127.0.0.1");
+            yield return IPAddress.Parse("172.19.0.1");
+            
             {
                 IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
                 foreach (var a in addresses)
