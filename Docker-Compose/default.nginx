@@ -38,7 +38,7 @@ server
     }
     location /ws {
         rewrite /(.*) /$1 break;
-        proxy_pass http://serverserverproxy:5000;
+        proxy_pass http://serverserverproxy;
         proxy_redirect off;
    
     }
