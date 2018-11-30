@@ -84,7 +84,9 @@ namespace ServerServerProxy
             {
                 while (true)
                 {
+                    m_Logger.LogInformation("AWAITING VNC CONNECTION");
                     TcpClient vncClient = await socketServer.AcceptTcpClientAsync();
+                    m_Logger.LogInformation("GOT VNC CONNECTION");
                     Stream vncClientStream = vncClient.GetStream();
                     m_VncClientStream.SetResult(vncClientStream);
                 }
@@ -97,7 +99,8 @@ namespace ServerServerProxy
         {
             var vncClientStream = await m_VncClientStream.Task;
             m_VncClientStream = new TaskCompletionSource<Stream>(); // reset for next connection attempt
-            // now we got the sockets/streams, lets pipe all data!
+                                                                    // now we got the sockets/streams, lets pipe all data!
+            m_Logger.LogInformation("TUNNEL IN THE PIPE");
             Pipe p = new Pipe(webSocket, vncClientStream);
             await p.TunnelAsync();
         }
