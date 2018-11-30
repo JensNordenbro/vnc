@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,13 +9,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using VncDeviceProxy;
+using Microsoft.Extensions.Options;
 
-namespace VncDeviceProxyCloudSide
+namespace ServerServerProxy
 {
     public class Startup
     {
@@ -30,92 +32,23 @@ namespace VncDeviceProxyCloudSide
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            
-            m_Logger.LogInformation("Adding proxy proxies");
-            IPAddress[] a = GetApprovedProxyAddresses();
-            m_Logger.LogInformation($"Got {a.Length} addresses");
-            for (int i = 0; i < a.Length; i++)
-            {
-                m_Logger.LogInformation($"Adding {a[i].ToString()} ");
-            }
-
-
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-
-                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-                options.KnownNetworks.Clear();
-                options.KnownProxies.Clear();
-
-                m_Logger.LogInformation($"Requesting DNS");
-                IPAddress[] addresses = GetApprovedProxyAddresses();
-                m_Logger.LogInformation($"Got {addresses.Length} addresses");
-                for (int i = 0; i < addresses.Length; i++)
-                {
-                    m_Logger.LogInformation($"Now Adding {addresses[i].ToString()} ");
-                    options.KnownProxies.Add(addresses[i]);
-                }
-            });
-            m_Logger.LogInformation($"Configure done");
-            
-
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        }
-
-        private IPAddress[] GetApprovedProxyAddresses() => _GetApprovedProxyAddresses().ToArray();
-
-
-        private IEnumerable<IPAddress> _GetApprovedProxyAddresses()
-        {
-            yield break;
-            /*
-
-            yield return IPAddress.Parse("40.127.108.43");
-            yield return IPAddress.Parse("127.0.0.1");
-            yield return IPAddress.Parse("172.19.0.1");
-            
-            {
-                IPAddress[] addresses = Dns.GetHostAddresses("nginxproxy");
-                foreach (var a in addresses)
-                    yield return a;
-            }
-            {
-                IPAddress[] addresses = Dns.GetHostAddresses("serverserverproxy");
-                foreach (var a in addresses)
-                    yield return a;
-            }
-            */
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseForwardedHeaders();
-            loggerFactory.AddConsole();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-         
+                app.UseHsts();
             }
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
-
-            //   app.UseWebSockets();
-
+            app.UseHttpsRedirection();
+            app.UseMvc();
             app.Use(async (context, next) =>
             {
                 m_Logger.LogInformation("REQUEST RECEIVED");

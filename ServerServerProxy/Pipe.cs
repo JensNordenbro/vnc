@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
-namespace VncDeviceProxy
+namespace ServerServerProxy
 {
     class Pipe
     {
@@ -18,8 +21,5 @@ namespace VncDeviceProxy
         {
             await Task.WhenAll(S1.CopyToAsync(S2), S2.CopyToAsync(S1));
         }
-
-
     }
-
 }
