@@ -49,7 +49,16 @@ namespace ServerServerProxy
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            var forwardingOptions = new ForwardedHeadersOptions()
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            forwardingOptions.KnownNetworks.Clear(); //its loopback by default
+            forwardingOptions.KnownProxies.Clear();
+            app.UseForwardedHeaders(forwardingOptions);
+            app.UseWebSockets();
+
             app.Use(async (context, next) =>
             {
                 m_Logger.LogInformation("REQUEST RECEIVED");
@@ -66,16 +75,7 @@ namespace ServerServerProxy
                 }
             });
 
-            var forwardingOptions = new ForwardedHeadersOptions()
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            };
-            forwardingOptions.KnownNetworks.Clear(); //its loopback by default
-            forwardingOptions.KnownProxies.Clear();
-            app.UseForwardedHeaders(forwardingOptions);
-
-
-
+            app.UseMvc();
 
             // not the best place perhaps to start a service but it is a spike :) 
             var socketServer = new TcpListener(IPAddress.Any, 5900);
