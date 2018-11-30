@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ServerServerProxy.Controllers
 {
-    [Route("rest")]
+    [Route("ws/rest")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
